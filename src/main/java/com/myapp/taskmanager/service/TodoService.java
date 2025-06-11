@@ -2,8 +2,8 @@ package com.myapp.taskmanager.service;
 
 import com.myapp.taskmanager.entity.Todo;
 import com.myapp.taskmanager.repository.TodoRepository;
+import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,10 +12,11 @@ import java.util.Optional;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor // *B, add RequiredArgsConstructor,  when add *B
 public class TodoService {
 
-    @Autowired
-    TodoRepository todoRepository;
+//    @Autowired // prevent get all first time (no data) มั้ง
+    private final TodoRepository todoRepository; // *B
 
     public List<Todo> getAllTodo() {
         return todoRepository.findAll();
