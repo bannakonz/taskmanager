@@ -19,12 +19,14 @@ public class TodoService {
     private final TodoRepository todoRepository; // *B
 
     public List<Todo> getAllTodo() {
-        return todoRepository.findAll();
+        List<Todo> todos = todoRepository.findAll();
+        log.info("get all todo ==> {}", todos);
+        return todos;
     }
 
     public Todo createTodo(Todo todo) {
+        log.info("payload create todo ==> {}", todo);
         todoRepository.save(todo);
-        log.info("Created todo: {}", todo);
 
         return todo;
     }
@@ -34,6 +36,7 @@ public class TodoService {
         if (todoOptional.isPresent()) {
               Todo todoGet = todoOptional.get();
               todoGet.setTitle(todo.getTitle());
+              todoGet.setCompleted(todo.isCompleted());
               todoRepository.save(todoGet);
               return todoGet;
         } else {
