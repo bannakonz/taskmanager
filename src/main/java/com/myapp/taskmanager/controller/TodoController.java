@@ -4,6 +4,7 @@ import com.myapp.taskmanager.entity.Todo;
 import com.myapp.taskmanager.service.TodoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,12 @@ public class TodoController {
     public ResponseEntity<Todo> createData(@RequestBody Todo reqCreateTodo) {
         Todo todo = todoService.createTodo(reqCreateTodo);
         log.info("Created todo controller: {}", todo);
+        return ResponseEntity.ok(todo);
+    }
+
+    @PutMapping("todo/{id}")
+    public ResponseEntity<Todo> updateData(@PathVariable Long id, @RequestBody Todo reqUpdateTodo) throws BadRequestException {
+        Todo todo = todoService.updateTodo(id, reqUpdateTodo);
         return ResponseEntity.ok(todo);
     }
 
