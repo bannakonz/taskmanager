@@ -13,6 +13,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class Todo {
 
     @Id
@@ -20,5 +21,6 @@ public class Todo {
 
     private Long id;
     private String title;
+    private boolean completed;
 
 }
