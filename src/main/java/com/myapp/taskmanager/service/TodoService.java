@@ -26,9 +26,9 @@ public class TodoService {
 
     public Todo createTodo(Todo todo) {
         log.info("payload create todo ==> {}", todo);
-        todoRepository.save(todo);
-
-        return todo;
+        Todo saved = todoRepository.save(todo);
+        log.info("saved todo ==> {}", saved);
+        return saved;
     }
 
     public Todo updateTodo(Long id, Todo todo) throws BadRequestException {
