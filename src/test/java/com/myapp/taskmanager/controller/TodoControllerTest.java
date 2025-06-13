@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -63,6 +64,12 @@ class TodoControllerTest {
         String req = """
                 { "title":"Reading Book" }
                 """;
+
+        Todo savedTodo = new Todo(1L, "Reading Book", false);
+
+        when(todoRepository.save(any(Todo.class)))
+                .thenReturn(savedTodo);
+
         mockMvc.perform(post("/api/todo")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(req))
@@ -70,6 +77,28 @@ class TodoControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.title").value("Reading Book"))
                 .andExpect(jsonPath("$.completed").value(false));
+
+    }
+
+    @Test
+    void createTodo_titleNotBlank_notEmpty() throws Exception {
+        String reqEmptyTitle = """
+                { "title": "" }
+                """;
+
+        mockMvc.perform(post("/api/todo")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(reqEmptyTitle))
+                .andExpect(status().isBadRequest());
+
+        String reqNullTitle = """
+                { "title": null }
+                """;
+
+        mockMvc.perform(post("/api/todo")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(reqNullTitle))
+                .andExpect(status().isBadRequest());
 
     }
 
