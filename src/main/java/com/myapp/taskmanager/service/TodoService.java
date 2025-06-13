@@ -20,18 +20,24 @@ public class TodoService {
 
     public List<Todo> getAllTodo() {
         List<Todo> todos = todoRepository.findAll();
-        log.info("get all todo ==> {}", todos);
+        log.info("TodoService get all todos ==> {}", todos);
         return todos;
     }
 
-    public Todo createTodo(Todo todo) {
-        log.info("payload create todo ==> {}", todo);
+    public Todo createTodo(Todo todo) throws BadRequestException {
+        log.info("TodoService createTodo(Todo todo) ==> {}", todo); // id ยังเป็น null เพราะยังไม่ลงฐานข้อมูล, และถ้าส่ง title เป็น null ตรงนี้ยังคงเป็น null
+        if (todo.getTitle() == null || todo.getTitle().trim().isEmpty()) {
+            log.info("Title is null or empty, throwing BadRequestException");
+            throw new BadRequestException("Title cannot be null or empty");
+        }
         todoRepository.save(todo);
-
+        log.info("TodoService createTodo(Todo todo) 2 ==> {}", todo); // id เป็น 1 เพราะถูก save ลงฐานข้อมูลแล้ว | Todo(id=1, title=null, completed=false)
         return todo;
     }
 
     public Todo updateTodo(Long id, Todo todo) throws BadRequestException {
+        log.info("updateTodo(Long id) ==> {} ", id);
+        log.info("updateTodo(Todo todo) ==> {}", todo);
         Optional<Todo>  todoOptional = todoRepository.findById(id);
         if (todoOptional.isPresent()) {
               Todo todoGet = todoOptional.get();

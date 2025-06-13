@@ -2,6 +2,7 @@ package com.myapp.taskmanager.controller;
 
 import com.myapp.taskmanager.entity.Todo;
 import com.myapp.taskmanager.service.TodoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
@@ -21,13 +22,16 @@ public class TodoController {
     @GetMapping("todo")
     public ResponseEntity<List<Todo>> getAllData() {
         List<Todo> data = todoService.getAllTodo();
+        log.info("@GetMapping(\"todo\") | List<Todo> data = {}", data);
         return ResponseEntity.ok(data);
     }
 
     @PostMapping("todo")
-    public ResponseEntity<Todo> createData(@RequestBody Todo reqCreateTodo) {
+    public ResponseEntity<Todo> createData(@RequestBody Todo reqCreateTodo) throws BadRequestException {
         Todo todo = todoService.createTodo(reqCreateTodo);
-        log.info("Created todo controller: {}", todo);
+        log.info("@PostMapping(\"todo\") | @RequestBody Todo reqCreateTodo = {} ", reqCreateTodo);
+        log.info("@PostMapping(\"todo\") | Todo todo = {}", todo);
+        log.info("ResponseEntity.ok(todo) {}", ResponseEntity.ok(todo)); // <200 OK OK,Todo(id=1, title=null, completed=false),[]>
         return ResponseEntity.ok(todo);
     }
 
