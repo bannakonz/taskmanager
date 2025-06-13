@@ -27,7 +27,7 @@ public class TodoController {
     }
 
     @PostMapping("todo")
-    public ResponseEntity<Todo> createData(@RequestBody Todo reqCreateTodo) throws BadRequestException {
+    public ResponseEntity<Todo> createData(@Valid @RequestBody Todo reqCreateTodo)  {
         Todo todo = todoService.createTodo(reqCreateTodo);
         log.info("@PostMapping(\"todo\") | @RequestBody Todo reqCreateTodo = {} ", reqCreateTodo);
         log.info("@PostMapping(\"todo\") | Todo todo = {}", todo);

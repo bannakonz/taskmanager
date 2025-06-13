@@ -4,8 +4,10 @@ import com.myapp.taskmanager.entity.Todo;
 import com.myapp.taskmanager.repository.TodoRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,15 +26,18 @@ public class TodoService {
         return todos;
     }
 
-    public Todo createTodo(Todo todo) throws BadRequestException {
+    public Todo createTodo(Todo todo) {
         log.info("TodoService createTodo(Todo todo) ==> {}", todo); // id ยังเป็น null เพราะยังไม่ลงฐานข้อมูล, และถ้าส่ง title เป็น null ตรงนี้ยังคงเป็น null
         if (todo.getTitle() == null || todo.getTitle().trim().isEmpty()) {
             log.info("Title is null or empty, throwing BadRequestException");
-            throw new BadRequestException("Title cannot be null or empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title cannot be null or empty");
         }
-        todoRepository.save(todo);
+        Todo savedTodo = todoRepository.save(todo);
+        log.info("save A= {}", savedTodo);
+        log.info("todo B= {}", todo);
         log.info("TodoService createTodo(Todo todo) 2 ==> {}", todo); // id เป็น 1 เพราะถูก save ลงฐานข้อมูลแล้ว | Todo(id=1, title=null, completed=false)
-        return todo;
+        return savedTodo;
+//        return todo;
     }
 
     public Todo updateTodo(Long id, Todo todo) throws BadRequestException {
